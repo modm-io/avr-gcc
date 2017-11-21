@@ -1,0 +1,83 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: salkinium/avr-gcc-prerequisites:latest
+    steps:
+      - checkout
+      # - run:
+      #     name: Fake Build Toolchain
+      #     command: |
+      #       mkdir -p avr-gcc
+      #       echo `date` > avr-gcc/toolchain.txt
+      #       echo `git describe --tags` >> avr-gcc/toolchain.txt
+      - run:
+          name: Build Toolchain
+          command: |
+            cd /work
+            cp /root/project/build.sh .
+            bash build.sh
+          no_output_timeout: 3600
+      - run:
+          name: Create Tarball
+          command: |
+            mkdir -p workspace
+            cp -r test/ workspace/
+            tar cjf workspace/avr-gcc.tar.bz2 -C /work avr-gcc
+      - store_artifacts:
+          path: workspace/avr-gcc.tar.bz2
+          destination: avr-gcc.tar.bz2
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - test
+            - avr-gcc.tar.bz2
+  test:
+    docker:
+      - image: salkinium/avr-gcc-prerequisites:latest
+    steps:
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Unpack Toolchain
+          command: tar xf workspace/avr-gcc.tar.bz2 --directory /work
+      - run:
+          name: Compiling test files
+          command: |
+            /work/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p workspace/test/main1.cpp
+            /work/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p workspace/test/main2.cpp
+  deploy:
+    docker:
+      - image: circleci/golang:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: Get GHR
+          command: go get github.com/tcnksm/ghr
+      - run:
+          name: Deploy
+          command: ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` workspace/avr-gcc.tar.bz2
+
+workflows:
+  version: 2
+
+  build-test-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /v.*/
+      - test:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /v.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /v.*/
