@@ -11,13 +11,13 @@ root=$(pwd)
 
 # Get sources
 wget -q   "https://raw.githubusercontent.com/osx-cross/homebrew-avr/master/avr-binutils-size.patch" &
-wget -qO- "http://ftp.gnu.org/gnu/binutils/binutils-2.29.tar.bz2" | tar xj --directory ${SRC} &
-wget -qO- "https://gcc.gnu.org/pub/gcc/releases/gcc-7.2.0/gcc-7.2.0.tar.xz" | tar xJ --directory ${SRC} &
+wget -qO- "http://ftp.gnu.org/gnu/binutils/binutils-2.30.tar.bz2" | tar xj --directory ${SRC} &
+wget -qO- "https://gcc.gnu.org/pub/gcc/releases/gcc-7.3.0/gcc-7.3.0.tar.xz" | tar xJ --directory ${SRC} &
 wget -qO- "https://download.savannah.gnu.org/releases/avr-libc/avr-libc-2.0.0.tar.bz2" | tar xj --directory ${SRC} &
 wait
 
 # Build binutils first
-cd ${SRC}/binutils-2.29
+cd ${SRC}/binutils-2.30
 # patch size file
 patch -g 0 -f -p0 -i ../../avr-binutils-size.patch
 mkdir build && cd build
@@ -30,7 +30,7 @@ make install
 export PATH=${root}/${INSTALL}/avr-binutils/bin:$PATH
 
 cd ${root}
-cd ${SRC}/gcc-7.2.0
+cd ${SRC}/gcc-7.3.0
 mkdir build && cd build
 ../configure --target=avr --prefix=${root}/${INSTALL}/avr-gcc/ \
         --with-ld=${root}/${INSTALL}/avr-binutils/bin/avr-ld \
