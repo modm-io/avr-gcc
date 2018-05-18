@@ -1,4 +1,4 @@
-FROM ubuntu:17.10
+FROM ubuntu:18.04
 MAINTAINER Niklas Hauser <niklas.hauser@rwth-aachen.de>
 LABEL Description="Image for building the upstream AVR GNU toolchain for Linux"
 WORKDIR /work
@@ -16,6 +16,7 @@ RUN apt-get update \
         libmpc-dev \
         libmpfr-dev \
         libgmp-dev \
+        libmpfr4 \
         texinfo \
         doxygen \
         flex \
