@@ -16,7 +16,7 @@ RUN apt-get update \
         libmpc-dev \
         libmpfr-dev \
         libgmp-dev \
-        libmpfr4 \
+        libmpfr6 \
         texinfo \
         doxygen \
         flex \
