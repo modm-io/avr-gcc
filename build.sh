@@ -9,18 +9,22 @@ mkdir ${BUILD}
 mkdir ${INSTALL}
 root=$(pwd)
 cores=4
+VERSION_BINUTILS="2.32"
+VERSION_GCC="9.1.0"
+VERSION_LIBC="2.0.0"
 
 # Get sources
-wget -q   "https://raw.githubusercontent.com/osx-cross/homebrew-avr/master/avr-binutils-size.patch" &
-wget -qO- "https://ftp.gnu.org/gnu/binutils/binutils-2.31.1.tar.bz2" | tar xj --directory ${SRC} &
-wget -qO- "https://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz" | tar xJ --directory ${SRC} &
-wget -qO- "https://download.savannah.gnu.org/releases/avr-libc/avr-libc-2.0.0.tar.bz2" | tar xj --directory ${SRC} &
+wget -q   "https://dl.bintray.com/osx-cross/avr-patches/avr-binutils-${VERSION_BINUTILS}-size.patch" &
+wget -q   "https://dl.bintray.com/osx-cross/avr-patches/avr-libc-${VERSION_LIBC}-atmega168pb.patch" &
+wget -qO- "https://ftp.gnu.org/gnu/binutils/binutils-${VERSION_BINUTILS}.tar.bz2" | tar xj --directory ${SRC} &
+wget -qO- "https://ftp.gnu.org/gnu/gcc/gcc-${VERSION_GCC}/gcc-${VERSION_GCC}.tar.xz" | tar xJ --directory ${SRC} &
+wget -qO- "https://download.savannah.gnu.org/releases/avr-libc/avr-libc-${VERSION_LIBC}.tar.bz2" | tar xj --directory ${SRC} &
 wait
 
 # Build binutils first
-cd ${SRC}/binutils-2.31.1
+cd ${SRC}/binutils-${VERSION_BINUTILS}
 # patch size file
-patch -g 0 -f -p0 -i ../../avr-binutils-size.patch
+patch -g 0 -f -p0 -i ../../avr-binutils-${VERSION_BINUTILS}-size.patch
 mkdir build && cd build
 # configure and make
 ../configure --prefix=${root}/${INSTALL}/avr-binutils/ --target=avr --disable-nls --disable-werror
@@ -31,7 +35,7 @@ make install
 export PATH=${root}/${INSTALL}/avr-binutils/bin:$PATH
 
 cd ${root}
-cd ${SRC}/gcc-8.2.0
+cd ${SRC}/gcc-${VERSION_GCC}
 mkdir build && cd build
 ../configure --target=avr --prefix=${root}/${INSTALL}/avr-gcc/ \
         --with-ld=${root}/${INSTALL}/avr-binutils/bin/avr-ld \
@@ -46,10 +50,13 @@ make install
 export PATH=${root}/${INSTALL}/avr-gcc/bin:$PATH
 
 cd ${root}
-cd ${SRC}/avr-libc-2.0.0
+cd ${SRC}/avr-libc-${VERSION_LIBC}
+patch -g 0 -f -p0 -i ../../avr-libc-${VERSION_LIBC}-atmega168pb.patch
 build=`./config.guess`
 ./configure --build=${build} --prefix=${root}/${INSTALL}/avr-gcc --host=avr
 make install -j${cores}
 
 cd ${root}
-rm -r build src avr-binutils-size.patch
+rm -r build src
+rm avr-binutils-${VERSION_BINUTILS}-size.patch
+rm avr-libc-${VERSION_LIBC}-atmega168pb.patch
