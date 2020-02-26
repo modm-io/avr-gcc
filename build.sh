@@ -10,7 +10,7 @@ mkdir ${INSTALL}
 root=$(pwd)
 cores=4
 VERSION_BINUTILS="2.32"
-VERSION_GCC="9.1.0"
+VERSION_GCC="9.2.0"
 VERSION_LIBC="2.0.0"
 
 # Get sources
