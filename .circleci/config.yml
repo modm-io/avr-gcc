@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: salkinium/avr-gcc-prerequisites:latest
+      - image: modm/avr-gcc-prerequisites:latest
     steps:
       - checkout
       # - run:
@@ -34,7 +34,7 @@ jobs:
             - avr-gcc.tar.bz2
   test:
     docker:
-      - image: salkinium/avr-gcc-prerequisites:latest
+      - image: modm/avr-gcc-prerequisites:latest
     steps:
       - attach_workspace:
           at: workspace
