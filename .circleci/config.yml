@@ -68,16 +68,19 @@ workflows:
       - build:
           filters:
             tags:
-              only: /v.*/
+              only: /^v.*/
       - test:
+          filters:
+            tags:
+              only: /^v.*/
           requires:
             - build
-          filters:
-            tags:
-              only: /v.*/
+      # Only run when pushing a tag!
       - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
           requires:
             - test
-          filters:
-            tags:
-              only: /v.*/
