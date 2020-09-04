@@ -3,8 +3,7 @@ LABEL maintainer="Niklas Hauser <niklas.hauser@rwth-aachen.de>"
 LABEL Description="Image for building the upstream AVR GNU toolchain for Linux"
 WORKDIR /work
 
-COPY . /work
-
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y \
