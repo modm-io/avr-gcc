@@ -9,22 +9,22 @@ mkdir ${BUILD}
 mkdir ${INSTALL}
 root=$(pwd)
 cores=4
-VERSION_BINUTILS="2.32"
-VERSION_GCC="9.2.0"
+#VERSION_BINUTILS="2.33"
+VERSION_GCC="10.2.0"
 VERSION_LIBC="2.0.0"
 
 # Get sources
-wget -q   "https://dl.bintray.com/osx-cross/avr-patches/avr-binutils-${VERSION_BINUTILS}-size.patch" &
+wget -q   "https://dl.bintray.com/osx-cross/avr-patches/avr-binutils-2.33-size.patch" &
 wget -q   "https://dl.bintray.com/osx-cross/avr-patches/avr-libc-${VERSION_LIBC}-atmega168pb.patch" &
-wget -qO- "https://ftp.gnu.org/gnu/binutils/binutils-${VERSION_BINUTILS}.tar.bz2" | tar xj --directory ${SRC} &
+wget -qO- "https://ftp.gnu.org/gnu/binutils/binutils-2.33.1.tar.bz2" | tar xj --directory ${SRC} &
 wget -qO- "https://ftp.gnu.org/gnu/gcc/gcc-${VERSION_GCC}/gcc-${VERSION_GCC}.tar.xz" | tar xJ --directory ${SRC} &
 wget -qO- "https://download.savannah.gnu.org/releases/avr-libc/avr-libc-${VERSION_LIBC}.tar.bz2" | tar xj --directory ${SRC} &
 wait
 
 # Build binutils first
-cd ${SRC}/binutils-${VERSION_BINUTILS}
+cd ${SRC}/binutils-2.33.1
 # patch size file
-patch -g 0 -f -p0 -i ../../avr-binutils-${VERSION_BINUTILS}-size.patch
+patch -g 0 -f -p0 -i ../../avr-binutils-2.33-size.patch
 mkdir build && cd build
 # configure and make
 ../configure --prefix=${INSTALL}/avr-binutils/ --target=avr --disable-nls --disable-werror
@@ -58,5 +58,5 @@ make install -j${cores}
 
 cd ${root}
 rm -r build src
-rm avr-binutils-${VERSION_BINUTILS}-size.patch
+rm avr-binutils-2.33-size.patch
 rm avr-libc-${VERSION_LIBC}-atmega168pb.patch
