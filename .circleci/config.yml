@@ -23,7 +23,7 @@ jobs:
           command: |
             mkdir -p workspace
             cp -r test/ workspace/
-            tar cjf workspace/avr-gcc.tar.bz2 -C /work avr-gcc
+            tar cjf workspace/avr-gcc.tar.bz2 -C /opt avr-gcc
       - store_artifacts:
           path: workspace/avr-gcc.tar.bz2
           destination: avr-gcc.tar.bz2
@@ -40,12 +40,13 @@ jobs:
           at: workspace
       - run:
           name: Unpack Toolchain
-          command: tar xf workspace/avr-gcc.tar.bz2 --directory /work
+          command: tar xf workspace/avr-gcc.tar.bz2 --directory /opt
       - run:
           name: Compiling test files
           command: |
-            /work/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p workspace/test/main1.cpp
-            /work/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p workspace/test/main2.cpp
+            /opt/avr-gcc/avr-gcc/bin/avr-g++ --version
+            /opt/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p workspace/test/main1.cpp
+            /opt/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p workspace/test/main2.cpp
   deploy:
     docker:
       - image: circleci/golang:latest
