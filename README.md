@@ -15,7 +15,7 @@ Add the `bin/` directories of avr-gcc and avr-binutils to your `$PATH`,
 e.g. by adding the following line to your `~/.bashrc` file:
 
 ```sh
-export PATH="/work/avr-gcc/avr-gcc/bin:/work/avr-gcc/avr-binutils/bin:$PATH"
+export PATH="/opt/avr-gcc/avr-gcc/bin:/opt/avr-gcc/avr-binutils/bin:$PATH"
 ```
 
 ## Building locally with Docker
