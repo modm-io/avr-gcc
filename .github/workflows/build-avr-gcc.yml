@@ -1,0 +1,68 @@
+name: Build AVR GCC
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-avr-gcc:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Install dependencies
+        run: |
+         sudo apt-get update
+         sudo apt-get upgrade -y
+         sudo apt-get install -y git wget autoconf2.64 build-essential netpbm libmpc-dev libmpfr-dev libgmp-dev libmpfr6 texinfo doxygen flex bison libexpat1-dev slang-xfig
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+         ls
+         bash ./build.sh
+
+      - name: Compiling test files
+        run: |
+         /opt/avr-gcc/avr-gcc/bin/avr-g++ --version
+         /opt/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p test/main1.cpp
+         /opt/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p test/main2.cpp
+
+      #- name: Fake toolchain
+      #  run: |
+      #   mkdir -p /opt/avr-gcc/bin
+      #   cp $(which true) /opt/avr-gcc/avr-gcc/bin/avr-g++
+
+      - name: Create tarball
+        run: |
+         tar cjf modm-avr-gcc.tar.bz2 -C /opt avr-gcc
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: modm-avr-gcc
+          path: modm-avr-gcc.tar.bz2
+
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/')
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: AVR GCC ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload release asset
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./modm-avr-gcc.tar.bz2
+          asset_name: modm-avr-gcc.tar.bz2
+          asset_content_type: application/x-bzip2
