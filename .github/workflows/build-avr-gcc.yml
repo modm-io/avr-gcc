@@ -25,14 +25,14 @@ jobs:
 
       - name: Compiling test files
         run: |
-         /opt/avr-gcc/avr-gcc/bin/avr-g++ --version
-         /opt/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p test/main1.cpp
-         /opt/avr-gcc/avr-gcc/bin/avr-g++ -mmcu=atmega328p test/main2.cpp
+         /opt/avr-gcc/bin/avr-g++ --version
+         /opt/avr-gcc/bin/avr-g++ -mmcu=atmega328p test/main1.cpp
+         /opt/avr-gcc/bin/avr-g++ -mmcu=atmega328p test/main2.cpp
 
       #- name: Fake toolchain
       #  run: |
       #   mkdir -p /opt/avr-gcc/bin
-      #   cp $(which true) /opt/avr-gcc/avr-gcc/bin/avr-g++
+      #   cp $(which true) /opt/avr-gcc/bin/avr-g++
 
       - name: Create tarball
         run: |
