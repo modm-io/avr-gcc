@@ -16,7 +16,7 @@ jobs:
          sudo apt-get install -y git wget autoconf2.64 build-essential netpbm libmpc-dev libmpfr-dev libgmp-dev libmpfr6 texinfo doxygen flex bison libexpat1-dev slang-xfig
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build
         run: |
@@ -39,30 +39,16 @@ jobs:
          tar cjf modm-avr-gcc.tar.bz2 -C /opt avr-gcc
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: modm-avr-gcc
           path: modm-avr-gcc.tar.bz2
 
       - name: Create release
         if: startsWith(github.ref, 'refs/tags/')
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: AVR GCC ${{ github.ref }}
+          name: AVR GCC ${{ github.ref }}
           draft: false
           prerelease: false
-
-      - name: Upload release asset
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./modm-avr-gcc.tar.bz2
-          asset_name: modm-avr-gcc.tar.bz2
-          asset_content_type: application/x-bzip2
+          files: modm-avr-gcc.tar.bz2
