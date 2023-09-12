@@ -1,20 +1,14 @@
-# Up-to-date AVR GNU GCC Toolchain from source
+# Mostly stolen from Github-User modm-io/avr-gcc (https://github.com/modm-io/avr-gcc.git)
+# PLUS
+# Added Asuro-Library
 
 ## Installation
 
-Download the latest `modm-avr-gcc.tar.bz2` from [Releases](https://github.com/modm-ext/docker-avr-gcc/releases)
-and unpack it to `/opt`:
+## Clone into this repo
 
-```sh
-tar xf modm-avr-gcc.tar.bz2 --directory /opt
-```
-
-Add the `bin/` directory to your `$PATH`,
-e.g. by adding the following line to your `~/.bashrc` file:
-
-```sh
-export PATH="/opt/avr-gcc/bin:$PATH"
-```
+````sh
+git clone https://github.com/WuTangTim/avr-gcc.git
+````
 
 ## Building locally with Docker
 
