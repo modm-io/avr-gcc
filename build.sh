@@ -9,8 +9,8 @@ mkdir ${BUILD}
 mkdir ${INSTALL}
 root=$(pwd)
 cores=8
-VERSION_BINUTILS="2.39"
-VERSION_GCC="12.2.0"
+VERSION_BINUTILS="2.40"
+VERSION_GCC="12.3.0"
 VERSION_LIBC="2.1.0"
 
 # Get sources
