@@ -16,31 +16,6 @@ e.g. by adding the following line to your `~/.bashrc` file:
 export PATH="/opt/avr-gcc/bin:$PATH"
 ```
 
-## Building locally with Docker
-
-There is a Docker image with all prerequisites for building, created from the `Dockerfile` in this repository.
-Build the image from the local `Dockerfile` and start it:
-
-```sh
-docker build --tag avr-gcc-prerequisites:local .
-docker run -it avr-gcc-prerequisites:local
-```
-
-Inside the Docker container get this repository
-
-```sh
-git clone https://github.com/modm-io/avr-gcc.git
-```
-
-Run the build.sh script
-
-```sh
-cd avr-gcc
-./build.sh
-```
-
-The toolchain will be in `/opt/avr-gcc`.
-
 ## Building in Github Actions
 
 There is a Github Actions job defined in `.github/workflows/` which builds the
