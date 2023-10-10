@@ -6,14 +6,14 @@ on:
 
 jobs:
   build-avr-gcc:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Install dependencies
         run: |
          sudo apt-get update
          sudo apt-get upgrade -y
-         sudo apt-get install -y git wget autoconf2.64 build-essential netpbm libmpc-dev libmpfr-dev libgmp-dev libmpfr6 texinfo doxygen flex bison libexpat1-dev slang-xfig
+         sudo apt-get install -y git wget autoconf build-essential netpbm libmpc-dev libmpfr-dev libgmp-dev libmpfr6 texinfo doxygen flex bison libexpat1-dev slang-xfig
 
       - name: Checkout
         uses: actions/checkout@v3
