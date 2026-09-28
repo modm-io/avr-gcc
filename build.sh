@@ -9,9 +9,9 @@ mkdir ${BUILD}
 mkdir ${INSTALL}
 root=$(pwd)
 cores=8
-VERSION_BINUTILS="2.45"
+VERSION_BINUTILS="2.47"
 VERSION_GCC="15.3.0"
-VERSION_LIBC="2.3.1"
+VERSION_LIBC="2.3.2"
 
 # Get sources
 wget -q   "https://raw.githubusercontent.com/archlinux/svntogit-community/c3efadcb76f4d8b1a3784015e7c472f59dbfa7de/avr-binutils/repos/community-x86_64/avr-size.patch" &
